@@ -18,23 +18,22 @@ jobs:
         with:
           node-version: 20
 
-      - name: Build Web App
-        run: |
-          npm init -y
-          npm install -g @bubblewrap/cli
-          npm install @capacitor/core @capacitor/cli @capacitor/android
-
       - name: Setup Java JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Build Android Project
+      - name: Install Capacitor & Generate Android Project
         run: |
-          npx cap init "Trading Journal" "com.trading.journal" --web-dir . || true
-          npx cap add android || true
-          npx cap sync android || true
+          npm init -y
+          npm install @capacitor/core @capacitor/cli @capacitor/android
+          npx cap init "Trading Journal" "com.trading.journal" --web-dir .
+          npx cap add android
+          npx cap sync android
+
+      - name: Build Android APK
+        run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
